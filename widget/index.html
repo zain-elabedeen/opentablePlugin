@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+<html ng-app="opentablePlugin">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>widget</title>
+    <script src="../../../scripts/angular/angular.min.js"></script>
+    <script type="text/javascript" src="../../../scripts/buildfire.js"></script>
+    <style>
+        iframe {
+            position: fixed;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body ng-controller="opentablePluginCtrl" ng-cloak>
+    <iframe src="http://m.opentable.com/" iframe-onload="iframeLoadedCallBack()"></iframe>
+    <script>
+        var opentablePluginApp = angular.module('opentablePlugin', []);
+
+        opentablePluginApp.directive("iframeOnload", [function () {
+            return {
+                scope: {
+                    callBack: '&iframeOnload'
+                },
+                link: function (scope, element, attrs) {
+                    element.on('load', function () {
+                        return scope.callBack();
+                    })
+                }
+            }
+        }])
+
+        opentablePluginApp.controller('opentablePluginCtrl', ["$scope", "$sce", function ($scope, $sce) {
+            buildfire.spinner.show();
+            $scope.iframeLoadedCallBack = function () {
+                buildfire.spinner.hide();
+            }
+        }]);
+    </script>
+</body>
+
+</html>
