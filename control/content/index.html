@@ -18,47 +18,23 @@
                 <span>URL</span>
             </div>
             <div class="col-md-10 pull-left">
-                <input id="url" name="url" type="url" class="form-control" ng-model="data.content.url" required>
+                <input id="url" name="url" placeholder="http://m.opentable.com" type="url" class="form-control" ng-model="data.content.url" required pattern="(https?\:\/\/)?(?:www|m)?\.(opentable)\.com.*">
             </div>
         </div>
 
         <div class="item clearfix row" ng-show="!urlValid">
             <div class="labels col-md-2 padding-right-zero pull-left"></div>
             <div class="col-md-10 pull-left">
-                <div class="alert alert-danger transition-half">Please enter a valid URL</div>
-            </div>
-        </div>
-
-        <div class="item clearfix row">
-            <div class="labels col-md-2 padding-right-zero pull-left"></div>
-            <div class="col-md-10 pull-left">
-                <div class="checkbox checkbox-primary">
-                    <input id="checkboxid" type="checkbox" ng-checked="data.content.openInApp" ng-model="data.content.openInApp">
-                    <label for="checkboxid">Open URL in the app </label>
-                </div>
+                <div class="alert alert-danger transition-half">Please enter a valid OpenTable URL</div>
             </div>
         </div>
 
         <hr class="none">
         <div class="item clearfix row">
             <div class="labels col-md-2 padding-right-zero pull-left"></div>
-            <div class="col-md-10 pull-left" style="padding-left: 46px;">
+            <div class="col-md-10 pull-left">
                 <p>
                     NOTE 1: For the best user experince link to mobile optimized content.
-                </p>
-
-                <p>
-                    NOTE 2: Based on your web content's settings, some contents will not show up in the emulator.
-                    however if you do not see your content in the emulator, it will still show up in the app.
-                </p>
-
-                <p>
-                    NOTE 3: If you are taking payments through this web page,
-                    you must open the the URL outside of the app or the app will get rejected by Apple in the submission review process.
-                </p>
-
-                <p>
-                    HINT: If you are taking payments, use your app or content DeepLink URL to redirect back to the app after a payment is made.
                 </p>
             </div>
         </div>
@@ -82,8 +58,7 @@
                 } else {
                     $scope.data = {
                         content: {
-                            url: "",
-                            openInApp: false
+                            url: ""
                         }
                     };
                 }
