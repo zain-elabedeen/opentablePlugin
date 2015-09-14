@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html>
+<html ng-app="opentablePlugin">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>widget</title>
+    <script src="../../../scripts/angular/angular.min.js"></script>
+    <script type="text/javascript" src="../../../scripts/buildfire.js"></script>
+    <style>
+        iframe {
+            position: fixed;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body ng-controller="opentablePluginCtrl" ng-cloak>
+    <iframe ng-src="{{ url }}" iframe-onload="iframeLoadedCallBack()"></iframe>
+    <script>
+        var opentablePluginApp = angular.module('opentablePlugin', []);
+
+        opentablePluginApp.directive("iframeOnload", [function () {
+            return {
+                scope: {
+                    callBack: '&iframeOnload'
+                },
+                link: function (scope, element, attrs) {
+                    element.on('load', function () {
+                        return scope.callBack();
+                    })
+                }
+            }
+        }])
+
+        opentablePluginApp.controller('opentablePluginCtrl', ["$scope", "$sce", function ($scope, $sce) {
+            buildfire.spinner.show();
+            /*
+             * Go pull saved data
+             * */
+            function loadData() {
+                buildfire.datastore.get(function (err, result) {
+                    var content = null;
+                    if (result && result.data && !angular.equals({}, result.data)) {
+                        if (result.data.content) {
+                            content = result.data.content;
+                            $scope.data = result.data;
+                            $scope.url = $sce.trustAsResourceUrl(content.url);
+                            if (!$scope.$$phase && !$scope.$root.$$phase) {
+                                $scope.$apply();
+                            }
+                        }
+                    } else {
+                        buildfire.spinner.hide();
+                    }
+                });
+            }
+
+            $scope.iframeLoadedCallBack = function () {
+                buildfire.spinner.hide();
+            }
+
+            loadData();
+
+            /**
+             * when a refresh is triggered get reload data
+             */
+            buildfire.datastore.onRefresh(loadData);
+
+            buildfire.datastore.onUpdate(function (e) {
+                loadData();
+            });
+        }]);
+    </script>
+</body>
+</html>
