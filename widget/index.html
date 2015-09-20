@@ -15,7 +15,7 @@
     </style>
 </head>
 <body ng-controller="opentablePluginCtrl" ng-cloak>
-    <iframe ng-src="{{ url }}" iframe-onload="iframeLoadedCallBack()"></iframe>
+    <iframe ng-src="{{ url }}" ng-if="data.content.openInApp" iframe-onload="iframeLoadedCallBack()"></iframe>
     <script>
         var opentablePluginApp = angular.module('opentablePlugin', []);
 
@@ -45,6 +45,15 @@
                             content = result.data.content;
                             $scope.data = result.data;
                             $scope.url = $sce.trustAsResourceUrl(content.url);
+
+                            if (!content.openInApp && content.url) {
+                                buildfire.navigation.openWindow(content.url, "_system");
+                                buildfire.spinner.hide();
+                                if (buildfire.context.device.platform != "web") {
+                                    buildfire.navigation.goBack();
+                                }
+                            }
+
                             if (!$scope.$$phase && !$scope.$root.$$phase) {
                                 $scope.$apply();
                             }
