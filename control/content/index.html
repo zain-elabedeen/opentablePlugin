@@ -11,7 +11,7 @@
     <script src="../../../../scripts/buildfire.js"></script>
     <script src="../../../../scripts/angular/angular.min.js"></script>
 </head>
-<body ng-controller="opentablePluginCtrl" id="openTableApp" ng-cloak>
+<body ng-controller="opentablePluginCtrl" id="openTableApp" ng-cloak ng-show="datastoreInitialized">
     <div ng-form="frmMain">
         <div class="item clearfix row margin-bottom-fifteen">
             <div class="labels col-md-2 padding-right-zero pull-left">
@@ -45,7 +45,7 @@
                 </div>
             </div>
         </div>
-        
+
         <hr class="none">
 
         <div class="item clearfix row">
@@ -64,10 +64,19 @@
         opentablePluginApp.controller("opentablePluginCtrl", ["$scope", "$log", "$timeout", function ($scope, $log, $timeout) {
             var dataChanged = false;
             $scope.urlValid = true;
+            $scope.datastoreInitialized = false;
+
             /*
              * Go pull any previously saved data
              * */
             buildfire.datastore.get(function (err, result) {
+                if (!err) {
+                    $scope.datastoreInitialized = true;
+                } else {
+                    console.error("Error: ", err);
+                    return;
+                }
+
                 if (result && result.data && !angular.equals({}, result.data)) {
                     $scope.data = result.data;
                     $scope.id = result.id;
@@ -95,8 +104,13 @@
                     $scope.$apply();
                 }
             });
-            
+
             $scope.saveData = function () {
+                if (!$scope.datastoreInitialized) {
+                    console.error("Error with datastore didn't get called");
+                    return;
+                }
+
                 if (!dataChanged) {
                     console.warn("data didn't changed")
                     return;
@@ -142,4 +156,5 @@
         }]);
     </script>
 </body>
+
 </html>
