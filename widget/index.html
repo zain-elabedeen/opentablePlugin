@@ -37,9 +37,11 @@
             }
     </style>
 </head>
-<body ng-controller="opentablePluginCtrl" ng-cloak>
-    <iframe ng-src="{{ url }}" ng-if="data.content.openInApp && !isWebPlateform" iframe-onload="iframeLoadedCallBack()"></iframe>
-    <div class="text-center link-verified" ng-if="data && data.content.url && isWebPlateform">
+<body class="no-scroll" ng-controller="opentablePluginCtrl" ng-cloak>
+	<div class="scrollable">
+    	<iframe ng-src="{{ url }}" ng-if="data.content.openInApp && !isWebPlateform" iframe-onload="iframeLoadedCallBack()"></iframe>
+    </div>
+	<div class="text-center link-verified" ng-if="data && data.content.url && isWebPlateform">
         <div class="col-md-12">
             <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
             <p>
