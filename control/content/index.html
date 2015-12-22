@@ -13,51 +13,41 @@
 </head>
 <body ng-controller="opentablePluginCtrl" id="openTableApp" ng-cloak ng-show="datastoreInitialized">
     <div ng-form="frmMain">
-        <div class="item clearfix row margin-bottom-fifteen">
-            <div class="labels col-md-2 padding-right-zero pull-left">
+        <div class="item clearfix row margin-bottom-ten">
+            <div class="labels col-md-3 padding-right-zero pull-left">
                 <span>URL</span>
             </div>
-            <div class="col-md-8 pull-left">
-                <input id="url" name="url" placeholder="http://m.opentable.com" type="text" class="form-control" ng-model="data.content.url" required pattern="(http:\/\/|https:\/\/)?(?:www|m)?\.(opentable)\.com.*">
-            </div>
-            <div class="col-md-2 pull-left padding-zero">
-                <button class="btn btn-success" ng-click="validateUrl()">
-                    Validate
-                </button>
-            </div>
+			<div class="main col-md-9 pull-right padding-left-zero">
+           	 	<div class="col-md-9 pull-left padding-left-zero">
+	                <input id="url" name="url" placeholder="http://m.opentable.com" type="text" class="form-control" ng-model="data.content.url" required pattern="(http:\/\/|https:\/\/)?(?:www|m)?\.(opentable)\.com.*">
+	            </div>
+	            <div class="col-md-3 pull-left padding-zero">
+	                <button class="btn btn-success stretch" ng-click="validateUrl()">Validate</button>
+	            </div>
+			</div>
         </div>
-
         <div class="item clearfix row" ng-show="!urlValid">
             <div class="labels col-md-2 padding-right-zero pull-left"></div>
             <div class="col-md-10 pull-left">
                 <div class="alert alert-danger transition-half">Please enter a valid OpenTable URL</div>
             </div>
         </div>
-
         <hr class="none">
-
         <div class="item clearfix row">
-            <div class="labels col-md-2 padding-right-zero pull-left"></div>
-            <div class="col-md-10 pull-left">
-                <div class="checkbox checkbox-primary">
+            <div class="col-md-9 padding-left-zero pull-right">
+                <div class="checkbox checkbox-primary margin-top-zero">
                     <input id="checkboxid" type="checkbox" ng-checked="data.content.openInApp" ng-model="data.content.openInApp" ng-change="openMethodChanged()">
                     <label for="checkboxid">Open URL in the app </label>
                 </div>
             </div>
         </div>
-
-        <hr class="none">
-
-        <div class="item clearfix row">
-            <div class="labels col-md-2 padding-right-zero pull-left"></div>
-            <div class="col-md-10 pull-left">
-                <p>
-                    NOTE: For the best user experince, link to mobile optimized content.
-                </p>
-            </div>
-        </div>
-    </div>
-
+		<hr class="none">
+		<div class="item clearfix row">
+            <div class="col-md-9 padding-left-zero pull-right" style="margin-top:-5px;">
+        		<p class="info padding-zero margin-zero">Note: For the best user experience, link to mobile optimized content.</p>
+   			</div>
+		</div>
+	</div>
     <script>
         var opentablePluginApp = angular.module('opentablePlugin', []);
 
