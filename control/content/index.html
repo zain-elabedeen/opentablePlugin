@@ -5,14 +5,18 @@
     <title>content</title>
     <!-- CSS -->
     <link href="../../../../styles/helper.css" rel="stylesheet">
-    <link href="../../../../styles/siteIcons.css" rel="stylesheet">
 
     <!-- JS -->
     <script src="../../../../scripts/buildfire.js"></script>
     <script src="../../../../scripts/angular/angular.min.js"></script>
 </head>
-<body ng-controller="opentablePluginCtrl" id="openTableApp" ng-cloak ng-show="datastoreInitialized">
+<body ng-controller="opentablePluginCtrl" id="webviewApp" ng-cloak ng-show="datastoreInitialized">
     <div ng-form="frmMain">
+<<<<<<< HEAD
+        <div class="item clearfix row margin-bottom-fifteen">
+            <div class="labels col-md-3 padding-right-zero pull-left">
+                <span>Open Table URL</span>
+=======
         <div class="item clearfix row margin-bottom-ten">
             <div class="labels col-md-3 padding-right-zero pull-left">
                 <span>URL</span>
@@ -30,8 +34,30 @@
             <div class="labels col-md-2 padding-right-zero pull-left"></div>
             <div class="col-md-10 pull-left">
                 <div class="alert alert-danger transition-half">Please enter a valid OpenTable URL</div>
+>>>>>>> 300f9d28553200d8fe141219025f0031b0c47fbd
+            </div>
+			<div class="main col-md-9 pull-right clearfix">
+           	 	<div class="col-md-9 pull-left padding-left-zero">
+	                <input id="url" name="opentableId" placeholder="http://www.opentable.com/restaurant" type="text" class="form-control" ng-model="data.content.opentableId" required pattern="(http:\/\/|https:\/\/)?(?:www\.)?(opentable)\.com\/.+">
+	            </div>
+	            <div class="col-md-3 pull-right padding-zero">
+	                <button class="btn btn-success stretch" ng-click="validateUrl()">
+	                    Validate
+	                </button>
+	            </div>
+			</div>
+        </div>
+<<<<<<< HEAD
+
+        <div class="item clearfix row" ng-show="idEmpty">
+            <div class="labels col-md-2 padding-right-zero pull-left"></div>
+            <div class="col-md-9 pull-right">
+                <div class="alert alert-danger transition-half">Please enter Open Table URL</div>
             </div>
         </div>
+    </div>
+
+=======
         <hr class="none">
         <div class="item clearfix row">
             <div class="col-md-9 padding-left-zero pull-right">
@@ -48,14 +74,16 @@
    			</div>
 		</div>
 	</div>
+>>>>>>> 300f9d28553200d8fe141219025f0031b0c47fbd
     <script>
         var opentablePluginApp = angular.module('opentablePlugin', []);
 
         opentablePluginApp.controller("opentablePluginCtrl", ["$scope", "$log", "$timeout", function ($scope, $log, $timeout) {
-            var dataChanged = false;
-            $scope.urlValid = true;
-            $scope.datastoreInitialized = false;
+            var timer = null,
+            dataChanged = false;
 
+            $scope.datastoreInitialized = false;
+            $scope.idEmpty = false;
             /*
              * Go pull any previously saved data
              * */
@@ -66,21 +94,20 @@
                     console.error("Error: ", err);
                     return;
                 }
-
+                
                 if (result && result.data && !angular.equals({}, result.data)) {
                     $scope.data = result.data;
                     $scope.id = result.id;
                 } else {
                     $scope.data = {
                         content: {
-                            url: "",
-                            openInApp: true
+                            opentableId: ""
                         }
                     };
                 }
 
                 /*
-                 * watch for changes in data
+                 * watch for changes in data and trigger the saveDataWithDelay function on change
                  * */
                 $scope.$watch('data', function (newObj, oldObj) {
                     if (angular.equals(newObj, oldObj) || newObj == undefined) {
@@ -95,7 +122,8 @@
                 }
             });
 
-            $scope.saveData = function () {
+
+            $scope.validateUrl = function () {
                 if (!$scope.datastoreInitialized) {
                     console.error("Error with datastore didn't get called");
                     return;
@@ -109,14 +137,14 @@
                 // if the form has some invalid data do not save, in our case the user eneter invalid URL
                 if ($scope.frmMain.$invalid) {
                     $log.warn('invalid data, details will not be saved');
-                    $scope.urlValid = false;
+                    $scope.idEmpty = true;
                 } else {
-                    $scope.urlValid = true;
+                    $scope.idEmpty = false;
                     dataChanged = false;
-                    if (!/^https?\:\/\//.test(data.content.url)) {
-                        data.content.url = "https://" + data.content.url;
+                    if (!/^https?\:\/\//.test(data.content.opentableId)) {
+                        data.content.opentableId = "https://" + data.content.opentableId;
                     }
-
+                    console.info("Saving...")
                     buildfire.datastore.save(data, function (err, result) {
                         if (err || !result) {
                             $log.error('Error saving the widget details: ', err);
@@ -127,22 +155,8 @@
                     });
                 }
             };
-
-            $scope.validateUrl = function () {
-                $scope.saveData();
-            };
-
-            $scope.openMethodChanged = function () {
-                dataChanged = true;
-                buildfire.datastore.save($scope.data, function (err, result) {
-                    if (err || !result) {
-                        $log.error('Error saving the widget details: ', err);
-                    }
-                    else {
-                        $log.info('Widget details saved');
-                    }
-                });
-            }
+			
+			
         }]);
     </script>
 </body>
