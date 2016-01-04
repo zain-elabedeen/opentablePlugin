@@ -12,79 +12,81 @@
             position: relative;
             display: none;
         }
-            /* 1 */
-            div.link-verified > div {
-                margin: 0;
-                position: absolute; /* 2 */
-                top: 50%; /* 3 */
-                transform: translate(0, -50%);
-                width: 100%;
-            }
 
-            div.link-verified .glyphicon {
-                border: 2px solid;
-                padding: 10px;
-                border-radius: 50%;
-                margin-bottom: 20px;
-            }
+        /* 1 */
+        div.link-verified > div {
+            margin: 0;
+            position: absolute; /* 2 */
+            top: 50%; /* 3 */
+            transform: translate(0, -50%);
+            width: 100%;
+        }
+
+        div.link-verified .glyphicon {
+            border: 2px solid;
+            padding: 10px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
-    <div class="text-center link-verified">
-        <div class="col-md-12">
-            <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-            <p>
-                We were able to verify the link you provided. The link will only appear on your mobile device.
-            </p>
-        </div>
+<div class="text-center link-verified">
+    <div class="col-md-12">
+        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+        <p>
+            We were able to verify the link you provided. The link will only appear on your mobile device.
+        </p>
     </div>
-    <script>
-        buildfire.spinner.show();
+</div>
+<script>
+    buildfire.spinner.show();
 
-        function dataLoadedHandler(result) {
-            var content = null;
-            if (result && result.data && !angular.equals({}, result.data)) {
-                if (result.data.content) {
-                    content = result.data.content;
-                    buildfire.spinner.hide();
-
-                    if (buildfire.context.device.platform != "web") {
+    function dataLoadedHandler(result) {
+        var content = null;
+        if (result && result.data && !angular.equals({}, result.data)) {
+            if (result.data.content) {
+                content = result.data.content;
+                buildfire.spinner.hide();
+                buildfire.getContext(function (err, context) {
+                    if (context.device.platform != "web") {
                         buildfire.navigation.openWindow(content.opentableId, "system");
                         buildfire.navigation.goBack();
                     } else {
                         document.querySelector(".link-verified").style.display = "block";
                     }
-                }
-            } else {
-                buildfire.spinner.hide();
+                });
             }
+        } else {
+            buildfire.spinner.hide();
         }
-        /*
-         * Go pull saved data
-         * */
-        var loadData = function () {
-            buildfire.datastore.get(function (err, result) {
-                if (err) {
-                    console.error("Error: ", err);
-                    buildfire.spinner.hide();
+    }
+    /*
+     * Go pull saved data
+     * */
+    var loadData = function () {
+        buildfire.datastore.get(function (err, result) {
+            if (err) {
+                console.error("Error: ", err);
+                buildfire.spinner.hide();
 
-                } else {
-                    dataLoadedHandler(result);
-                }
-            });
-        }
-
-        loadData();
-
-        /**
-         * when a refresh is triggered get reload data
-         */
-        buildfire.datastore.onRefresh(loadData);
-
-        buildfire.datastore.onUpdate(function (result) {
-            dataLoadedHandler(result);
+            } else {
+                dataLoadedHandler(result);
+            }
         });
-    </script>
+    }
+
+    loadData();
+
+    /**
+     * when a refresh is triggered get reload data
+     */
+    buildfire.datastore.onRefresh(loadData);
+
+    buildfire.datastore.onUpdate(function (result) {
+        dataLoadedHandler(result);
+    });
+</script>
 </body>
 
 </html>
